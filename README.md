@@ -132,7 +132,7 @@ pre-render script or CI. Its warnings are heuristics; judge each one.
 
 ## Works well with
 
-- [remotion-music-finder](https://github.com/Felipe3052/remotion-music-finder): finds licensed background music that fits the video (coming soon).
+- [remotion-music-finder](https://github.com/Felipe3052/remotion-music-finder): finds licensed background music that fits the video, with a licence check and beat-timed cuts.
 - The official Remotion skills ([remotion-dev/skills](https://github.com/remotion-dev/skills))
   for writing compositions. This skill takes over once there is a render.
 
