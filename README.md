@@ -31,6 +31,56 @@ makes sure the result is actually good before anyone sees it.
   `findings.json` per video so regressions show up. It stops after three
   rounds per issue.
 
+## Example: before and after
+
+The test was set up to be fair:
+
+1. **Before:** A fresh agent was given an ordinary request: "build a ~20 s
+   promo for a fictional chores app, in 16:9 and 9:16, with a phone mockup,
+   zooms and a CTA". It had no knowledge of this skill, and it was told not
+   to use any skills.
+2. **After:** A second fresh agent got an identical copy of that finished
+   project and ran this skill on it, with no other hints.
+
+Across both formats the skill found **12 issues in 3 rounds**. Ten were
+fixed, one is a wording decision the skill would normally leave to you, and
+one was judged intentional. The log of the 16:9 version is in
+[`docs/example-findings.json`](docs/example-findings.json).
+
+![Before/after 9:16: big gap between headline and phone, kicker inside the top safe zone, text shining through the notification](docs/before-after-9x16.jpg)
+
+In the 9:16 version above, three things were wrong:
+- When the camera zoomed onto the notification, the phone slid down and left
+  a ~550 px gap under the headline.
+- The kicker sat inside the top 14 % that TikTok and Reels cover.
+- Text from the screen behind showed through the notification.
+
+![Before/after: ghost text "NEVER MISS YOUR TURN" behind a 97 % opaque banner; the reminder also contradicted the weekly plan](docs/before-after-notification.jpg)
+
+Here is the notification up close. The banner was only 97 % opaque. And the
+story contradicted itself: it said "Due today", but the plan has the bathroom
+on Thursday.
+
+![Before/after end card: the CTA was split over a headline and a button that wasn't an action](docs/before-after-cta.jpg)
+
+The end card said "Tidy" and "free" twice each, and the button ("Free on iOS
+& Android") wasn't an action. The skill made one clear CTA out of it, and
+marked the new wording `ask-user`, because copy is your call.
+
+Other findings:
+
+| Finding | Fix |
+|---|---|
+| The camera zoomed fully in and out around every screen change ("zoom pumping") | One continuous camera: in once, pan between focus points, out once before the CTA |
+| The notification vanished in a single frame instead of sliding out with its screen (only visible in a 30 fps strip) | Rendered in the layer of its screen |
+| The phone stood still without a headline for 0.4 s right after the hook | Headline starts earlier |
+| The leaderboard zoom was too weak, with 18 px text | Stronger zoom |
+| Lint: `interpolate` without clamp | Clamped, except where the spring overshoot is wanted |
+
+This is what the agent looks at first, the 1-fps contact sheet:
+
+![Contact sheet, one frame per second](docs/contact-sheet.jpg)
+
 ## Install
 
 You need `ffmpeg` and `ffprobe` on PATH and Node 18+. No npm packages are
@@ -82,6 +132,7 @@ pre-render script or CI. Its warnings are heuristics; judge each one.
 
 ## Works well with
 
+- [remotion-music-finder](https://github.com/Felipe3052/remotion-music-finder): finds licensed background music that fits the video (coming soon).
 - The official Remotion skills ([remotion-dev/skills](https://github.com/remotion-dev/skills))
   for writing compositions. This skill takes over once there is a render.
 
